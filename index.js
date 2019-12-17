@@ -1,1 +1,4 @@
-export { default as Timer } from './src/Timer';
+export { default as Timer } from './Timer';
+/*module.exports = {
+    Timer: require("./src/Timer.js").default
+  };*/
