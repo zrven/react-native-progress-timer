@@ -1,0 +1,27 @@
+{
+  "name": "react-native-progress-timer",
+  "version": "1.0.0",
+  "description": "React Native Timer component with progress indicators",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-component",
+    "react",
+    "mobile",
+    "react-native-progress-timer",
+    "timer",
+    "progress"
+  ],
+  "author": "Raghav Chidella",
+  "license": "ISC",
+  "dependencies": {
+    "moment": "^2.24.0",
+    "moment-duration-format": "^2.3.2",
+    "prop-types": "^15.7.2",
+    "react-native-progress": "^4.0.2",
+    "react-native-timer": "^1.3.6"
+  }
+}
