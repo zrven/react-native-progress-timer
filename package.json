@@ -15,6 +15,10 @@
     "timer",
     "progress"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zrven/react-native-progress-timer"
+  },
   "author": "Raghav Chidella",
   "license": "ISC",
   "dependencies": {
