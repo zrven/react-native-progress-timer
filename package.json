@@ -1,6 +1,6 @@
 {
   "name": "react-native-progress-timer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native Timer component with progress indicators",
   "main": "index.js",
   "scripts": {
@@ -15,6 +15,7 @@
     "timer",
     "progress"
   ],
+  "homepage": "https://github.com/zrven/react-native-progress-timer",
   "repository": {
     "type": "git",
     "url": "https://github.com/zrven/react-native-progress-timer"
