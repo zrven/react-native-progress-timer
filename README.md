@@ -1,6 +1,9 @@
 # react-native-progress-timer
 React Native Timer component with progress indicator
 
+![progress-timer-demo-1](https://gist.githubusercontent.com/zrven/95ca4faf2a470525e40decc27b1bc5d8/raw/08be119d6a72df1dbf615ea9e3ffbe51e3943b43/screenshot-1.png)
+![progress-timer-demo-2](https://gist.githubusercontent.com/zrven/357e0464e05ee7588e4244a368e9f8b6/raw/e4b75ece824bc3f2be2a27a07da913c49ebb6b5e/screenshot-2.png)
+
 ## Installation
 
 `$ npm install react-native-progress-timer --save`
@@ -8,7 +11,7 @@ React Native Timer component with progress indicator
 ## Usage
 
 ```js
-import Timer from 'react-native-progress-timer';
+import { Timer } from 'react-native-progress-timer';
 
 
         <Timer
@@ -68,7 +71,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import Timer from 'react-native-progress-timer';
+import { Timer } from 'react-native-progress-timer';
 
 const App: () => React$Node = () => {
   return (
