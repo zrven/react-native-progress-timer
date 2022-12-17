@@ -23,8 +23,8 @@ class Timer extends Component{
         };
         this.defaultStyles = {
             view: {
-                flexDirection: 'row', 
-                justifyContent: 'space-between', 
+                flexDirection: 'row',
+                justifyContent: 'space-between',
                 margin: 10
               },
               highlight: {
@@ -54,38 +54,50 @@ class Timer extends Component{
         this.tick = this.tick.bind(this);
     }
 
-    tick() {  
-        if(this.state.initialState) {
-          this.setState({ 
-            initialState: false,
-            counter: this.state.interval, 
-            originalCounter: this.state.interval,
-            play: false, 
-            stop: !this.state.stop, 
-            pause: true,
-            resume: false
-          });
+    tick() {
+
+        if (this.state.initialState) {
+
+            const originalCounter = this.state.interval;
+
+            const initCounter = originalCounter - 1;
+
+            const initProgress = 1 - (initCounter / originalCounter);
+
+            this.setState({
+                initialState: false,
+                counter: initCounter,
+                originalCounter: originalCounter,
+                play: false,
+                stop: !this.state.stop,
+                pause: true,
+                resume: false,
+                progress: initProgress,
+            });
+
+            return;
         }
 
-        if(this.state.counter <= 0) {
-            this.setState({ 
-                counter: 0,
-                progress: 0,
-                play: true,
-                pause: false,
-                resume: false
+        if (this.state.counter <= 0) {
+
+            this.setState({
+                counter: 0, progress: 0, play: true, pause: false, resume: false,
             });
             this.releaseResources();
         } else {
-            this.setState({ 
-                counter: this.state.counter - 1,
-                progress: 1 - this.state.counter/this.state.originalCounter
+
+            const counter = this.state.counter - 1;
+
+            const progress = 1 - (counter / this.state.originalCounter);
+
+            this.setState({
+                counter: counter,
+                progress: progress,
             });
 
-            timer.setInterval(this, 'tick', () => this.tick(), 1000);
-        }  
-            
+        }
     }
+
 
     _displayText(){
         return moment.duration(this.state.counter, 'seconds').format('hh:mm:ss', { trim: false });
@@ -135,7 +147,7 @@ class Timer extends Component{
             return 'Pause'
         else if(this.state.resume)
             return 'Resume'
-        else 
+        else
             return 'Start'
     }
 
