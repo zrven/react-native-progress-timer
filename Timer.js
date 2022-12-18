@@ -11,6 +11,25 @@ import timer from 'react-native-timer';
 class Timer extends Component{
     constructor(props){
         super(props);
+
+        if (this.props.remainingTime == null || this.props.remainingTime === 0) {
+            throw Error("Setting the remainingTime value is required.");
+        }
+
+        const remainingTime = this.props.remainingTime;
+
+        this.state = {
+            counter: remainingTime,
+            originalCounter: remainingTime,
+            initialState: true,
+            progress: 0,
+            play: true,
+            pause: false,
+            stop: true,
+            resume: false,
+            interval: remainingTime,
+        };
+
         this.state = {
           counter: 0,
           originalCounter: 0,
@@ -107,7 +126,6 @@ class Timer extends Component{
             //this._stop();
             this.setState({
                 initialState: true,
-                interval: this.props.remainingTime,
                 play: false,
                 pause: true,
                 resume: false
