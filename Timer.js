@@ -11,16 +11,25 @@ import timer from 'react-native-timer';
 class Timer extends Component{
     constructor(props){
         super(props);
+
+        if (this.props.remainingTime == null) {
+            throw Error("Setting the remainingTime value is required.");
+        }
+
+        const remainingTime = this.props.remainingTime;
+
         this.state = {
-          counter: 0,
-          originalCounter: 0,
-          initialState: true,
-          progress:0,
-          play: true,
-          pause: false,
-          stop: true,
-          resume: false,
+            counter: remainingTime,
+            originalCounter: remainingTime,
+            initialState: true,
+            progress: 0,
+            play: true,
+            pause: false,
+            stop: true,
+            resume: false,
+            interval: remainingTime,
         };
+
         this.defaultStyles = {
             view: {
                 flexDirection: 'row',
@@ -107,7 +116,6 @@ class Timer extends Component{
             //this._stop();
             this.setState({
                 initialState: true,
-                interval: this.props.remainingTime,
                 play: false,
                 pause: true,
                 resume: false
@@ -156,12 +164,13 @@ class Timer extends Component{
             timer.clearInterval(this);
             timer.cancelAnimationFrame(this);
             this.setState({
-            counter: 0,
-                originalCounter: 0,
+                counter: this.state.originalCounter,
                 progress: 0,
+                play: true,
                 pause: false,
+                stop: true,
                 resume: false,
-            })
+            });
         }catch(err){console.log(err)}
     }
 
