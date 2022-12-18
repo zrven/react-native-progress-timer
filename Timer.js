@@ -12,7 +12,7 @@ class Timer extends Component{
     constructor(props){
         super(props);
 
-        if (this.props.remainingTime == null || this.props.remainingTime === 0) {
+        if (this.props.remainingTime == null) {
             throw Error("Setting the remainingTime value is required.");
         }
 
