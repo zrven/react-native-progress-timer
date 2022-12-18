@@ -166,9 +166,11 @@ class Timer extends Component{
             this.setState({
                 counter: this.state.originalCounter,
                 progress: 0,
+                play: true,
                 pause: false,
+                stop: true,
                 resume: false,
-            })
+            });
         }catch(err){console.log(err)}
     }
 
