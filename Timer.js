@@ -30,16 +30,6 @@ class Timer extends Component{
             interval: remainingTime,
         };
 
-        this.state = {
-          counter: 0,
-          originalCounter: 0,
-          initialState: true,
-          progress:0,
-          play: true,
-          pause: false,
-          stop: true,
-          resume: false,
-        };
         this.defaultStyles = {
             view: {
                 flexDirection: 'row',
