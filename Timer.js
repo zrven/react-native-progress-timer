@@ -164,8 +164,7 @@ class Timer extends Component{
             timer.clearInterval(this);
             timer.cancelAnimationFrame(this);
             this.setState({
-            counter: 0,
-                originalCounter: 0,
+                counter: this.state.originalCounter,
                 progress: 0,
                 pause: false,
                 resume: false,
