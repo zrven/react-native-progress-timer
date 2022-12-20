@@ -1,33 +1,28 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import {
     View,
     TouchableHighlight
 } from 'react-native'
 import * as moment from 'moment';
+
 require('moment-duration-format')
 import * as Progress from 'react-native-progress';
 import timer from 'react-native-timer';
 
-class Timer extends Component{
-    constructor(props){
+class Timer extends Component {
+
+    constructor(props) {
         super(props);
-
-        if (this.props.remainingTime == null) {
-            throw Error("Setting the remainingTime value is required.");
-        }
-
-        const remainingTime = this.props.remainingTime;
-
         this.state = {
-            counter: remainingTime,
-            originalCounter: remainingTime,
+            counter: 0,
+            originalCounter: 0,
             initialState: true,
             progress: 0,
             play: true,
             pause: false,
             stop: true,
             resume: false,
-            interval: remainingTime,
+            interval: 0,
         };
 
         this.defaultStyles = {
@@ -35,32 +30,74 @@ class Timer extends Component{
                 flexDirection: 'row',
                 justifyContent: 'space-between',
                 margin: 10
-              },
-              highlight: {
+            },
+            highlight: {
                 backgroundColor: '#ffffff'
-              },
-              play: {
+            },
+            play: {
                 underlayColor: '#ffffff',
                 borderColor: '#d9dcdd',
-                textStyle:{
-                  color: '#000000'
+                textStyle: {
+                    color: '#000000'
                 },
                 style: {
-                  backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff'
                 }
-              },
-              cancel: {
+            },
+            cancel: {
                 underlayColor: '#ffffff',
                 borderColor: '#d9dcdd',
-                textStyle:{
-                  color: '#000000'
+                textStyle: {
+                    color: '#000000'
                 },
                 style: {
-                  backgroundColor: '#ffffff'
+                    backgroundColor: '#ffffff'
                 }
-              }
-          };
+            }
+        };
         this.tick = this.tick.bind(this);
+    }
+
+    componentDidMount() {
+
+        if (this.props.remainingTime == null) {
+            throw Error("setting the remainingTime value is required");
+        }
+
+        const remainingTime = this.props.remainingTime;
+
+        this.setState(
+            {
+                counter: remainingTime,
+                originalCounter: remainingTime,
+                initialState: true,
+                progress: 0,
+                play: true,
+                pause: false,
+                stop: true,
+                resume: false,
+                interval: remainingTime,
+            }
+        )
+    }
+
+    componentDidUpdate() {
+
+        const remainingTime = this.props.remainingTime
+
+        if (this.state.originalCounter != remainingTime) {
+            this.setState({
+                counter: remainingTime,
+                originalCounter: remainingTime,
+                initialState: true,
+                progress: 0,
+                play: true,
+                pause: false,
+                stop: true,
+                resume: false,
+                interval: remainingTime,
+            })
+        }
     }
 
     tick() {
@@ -107,20 +144,20 @@ class Timer extends Component{
         }
     }
 
-    _displayText(){
-        return moment.duration(this.state.counter, 'seconds').format('hh:mm:ss', { trim: false });
+    _displayText() {
+        return moment.duration(this.state.counter, 'seconds').format('hh:mm:ss', {trim: false});
     }
 
-    _play(){
-        if(this.state.play){
+    _play() {
+        if (this.state.play) {
             //this._stop();
             this.setState({
                 initialState: true,
                 play: false,
                 pause: true,
                 resume: false
-              })
-        } else if(this.state.pause){
+            })
+        } else if (this.state.pause) {
             this.releaseResources()
             this.setState({
                 counter: this.state.counter,
@@ -129,9 +166,9 @@ class Timer extends Component{
                 play: false,
                 pause: false,
                 resume: true
-              })
+            })
             return;
-        } else if(this.state.resume){
+        } else if (this.state.resume) {
             this.setState({
                 counter: this.state.counter,
                 originalCounter: this.state.originalCounter,
@@ -139,27 +176,27 @@ class Timer extends Component{
                 play: false,
                 pause: true,
                 resume: false
-              })
+            })
         }
 
         timer.setInterval(this, 'tick', () => this.tick(), 1000);
     }
 
-    _cancel(){
+    _cancel() {
         this.releaseResources()
     }
 
-    _showActionText(){
-        if(this.state.pause)
+    _showActionText() {
+        if (this.state.pause)
             return 'Pause'
-        else if(this.state.resume)
+        else if (this.state.resume)
             return 'Resume'
         else
             return 'Start'
     }
 
     releaseResources() {
-        try{
+        try {
             timer.clearTimeout(this);
             timer.clearInterval(this);
             timer.cancelAnimationFrame(this);
@@ -171,13 +208,15 @@ class Timer extends Component{
                 stop: true,
                 resume: false,
             });
-        }catch(err){console.log(err)}
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     render() {
         const {
             remainingTime,
-            options = (options==null) ? this.defaultStyles : options,
+            options = (options == null) ? this.defaultStyles : options,
             animated,
             borderColor,
             borderWidth,
@@ -199,36 +238,37 @@ class Timer extends Component{
             endAngle,
             allowFontScaling,
             ...restProps
-          } = this.props;
+        } = this.props;
 
         return (
             <View style={options.container}>
-              <View style={options.view}>
-                <Progress.Circle
-                    animated={animated}
-                    borderColor= {borderColor}
-                    borderWidth= {borderWidth}
-                    color={color}
-                    children={children}
-                    direction={direction}
-                    fill={fill}
-                    formatText={(progress) => this._displayText(progress)}
-                    indeterminate={this.props.indeterminate}
-                    progress={this.state.progress}
-                    rotation={rotation}
-                    showsText={showsText}
-                    size={size}
-                    style={style}
-                    strokeCap={strokeCap}
-                    textStyle={textStyle}
-                    thickness={thickness}
-                    unfilledColor={unfilledColor}
-                    endAngle={unfilledColor}
-                    allowFontScaling={allowFontScaling}
-                  />
-              </View>
-              <View style={options.view}>
-                <TouchableHighlight style={options.highlight.style} underlayColor={options.play.underlayColor} activeOpacity={1} onPress={() => this._cancel()}>
+                <View style={options.view}>
+                    <Progress.Circle
+                        animated={animated}
+                        borderColor={borderColor}
+                        borderWidth={borderWidth}
+                        color={color}
+                        children={children}
+                        direction={direction}
+                        fill={fill}
+                        formatText={(progress) => this._displayText(progress)}
+                        indeterminate={this.props.indeterminate}
+                        progress={this.state.progress}
+                        rotation={rotation}
+                        showsText={showsText}
+                        size={size}
+                        style={style}
+                        strokeCap={strokeCap}
+                        textStyle={textStyle}
+                        thickness={thickness}
+                        unfilledColor={unfilledColor}
+                        endAngle={unfilledColor}
+                        allowFontScaling={allowFontScaling}
+                    />
+                </View>
+                <View style={options.view}>
+                    <TouchableHighlight style={options.highlight.style} underlayColor={options.play.underlayColor}
+                                        activeOpacity={1} onPress={() => this._cancel()}>
                         <Progress.Circle
                             textStyle={options.play.textStyle}
                             style={options.play.style}
@@ -243,7 +283,8 @@ class Timer extends Component{
                             indeterminate={false}
                         />
                     </TouchableHighlight>
-                    <TouchableHighlight style={options.highlight.style} activeOpacity={1} underlayColor={options.cancel.underlayColor} onPress={() => this._play()}>
+                    <TouchableHighlight style={options.highlight.style} activeOpacity={1}
+                                        underlayColor={options.cancel.underlayColor} onPress={() => this._play()}>
                         <Progress.Circle
                             textStyle={options.cancel.textStyle}
                             style={options.cancel.style}
@@ -259,9 +300,9 @@ class Timer extends Component{
                         />
                     </TouchableHighlight>
                 </View>
-          </View>
+            </View>
         );
     }
 }
 
-export default Timer
+export default React.memo(Timer)
