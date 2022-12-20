@@ -58,27 +58,25 @@ class Timer extends Component {
         this.tick = this.tick.bind(this);
     }
 
-    componentDidMount() {
-
-        if (this.props.remainingTime == null) {
-            throw Error("setting the remainingTime value is required");
-        }
+   componentDidMount() {
 
         const remainingTime = this.props.remainingTime;
 
-        this.setState(
-            {
-                counter: remainingTime,
-                originalCounter: remainingTime,
-                initialState: true,
-                progress: 0,
-                play: true,
-                pause: false,
-                stop: true,
-                resume: false,
-                interval: remainingTime,
-            }
-        )
+        if (remainingTime == null || typeof remainingTime == "undefined") {
+            throw Error("setting the remainingTime value is required");
+        }
+
+        this.setState({
+            counter: remainingTime,
+            originalCounter: remainingTime,
+            initialState: true,
+            progress: 0,
+            play: true,
+            pause: false,
+            stop: true,
+            resume: false,
+            interval: remainingTime,
+        })
     }
 
     componentDidUpdate() {
