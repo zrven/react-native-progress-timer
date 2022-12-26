@@ -1,18 +1,15 @@
-import React, {Component} from 'react'
-import {
-    View,
-    TouchableHighlight
-} from 'react-native'
-import * as moment from 'moment';
+import React, { Component } from 'react'
+import { View, TouchableHighlight } from 'react-native'
+import * as moment from 'moment'
+//import PropTypes from 'prop-types';
 
-require('moment-duration-format')
-import * as Progress from 'react-native-progress';
-import timer from 'react-native-timer';
+import momentDurationFormatSetup from 'moment-duration-format'
+import * as Progress from 'react-native-progress'
+import timer from 'react-native-timer'
 
 class Timer extends Component {
-
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             counter: 0,
             originalCounter: 0,
@@ -23,48 +20,43 @@ class Timer extends Component {
             stop: true,
             resume: false,
             interval: 0,
-        };
+            remainingTime: 10,
+        }
 
         this.defaultStyles = {
             view: {
                 flexDirection: 'row',
                 justifyContent: 'space-between',
-                margin: 10
-            },
-            highlight: {
-                backgroundColor: '#ffffff'
+                margin: 10,
             },
             play: {
                 underlayColor: '#ffffff',
                 borderColor: '#d9dcdd',
                 textStyle: {
-                    color: '#000000'
+                    color: '#000000',
                 },
                 style: {
-                    backgroundColor: '#ffffff'
-                }
+                    backgroundColor: '#ffffff',
+                },
             },
             cancel: {
                 underlayColor: '#ffffff',
                 borderColor: '#d9dcdd',
                 textStyle: {
-                    color: '#000000'
+                    color: '#000000',
                 },
-                style: {
-                    backgroundColor: '#ffffff'
-                }
-            }
-        };
-        this.tick = this.tick.bind(this);
+                backgroundColor: '#ffffff',
+            },
+        }
+        momentDurationFormatSetup(moment)
+        this.tick = this.tick.bind(this)
     }
 
-   componentDidMount() {
-
-        const remainingTime = this.props.remainingTime;
-
-        if (remainingTime == null || typeof remainingTime == "undefined") {
-            throw Error("setting the remainingTime value is required");
-        }
+    componentDidMount() {
+        const remainingTime =
+            typeof this.props.remainingTime === 'undefined'
+                ? this.state.remainingTime
+                : this.props.remainingTime
 
         this.setState({
             counter: remainingTime,
@@ -76,13 +68,12 @@ class Timer extends Component {
             stop: true,
             resume: false,
             interval: remainingTime,
+            remainingTime: remainingTime,
         })
     }
 
-    componentDidUpdate() {
-
-        const remainingTime = this.props.remainingTime
-
+    componentDidUpdate(prevProps) {
+        const remainingTime = this.state.remainingTime
         if (this.state.originalCounter != remainingTime) {
             this.setState({
                 counter: remainingTime,
@@ -96,17 +87,26 @@ class Timer extends Component {
                 interval: remainingTime,
             })
         }
+        if (
+            typeof this.props.remainingTime !== 'undefined' &&
+            typeof prevProps.remainingTime !== 'undefined' &&
+            prevProps.remainingTime !== this.props.remainingTime
+        ) {
+            this.setState({
+                counter: this.props.remainingTime,
+                originalCounter: this.props.remainingTime,
+                interval: this.props.remainingTime,
+                remainingTime: this.props.remainingTime,
+            })
+        }
     }
 
     tick() {
-
         if (this.state.initialState) {
-
-            const originalCounter = this.state.interval;
-
-            const initCounter = originalCounter - 1;
-
-            const initProgress = 1 - (initCounter / originalCounter);
+            const originalCounter = this.state.interval
+            const initCounter = originalCounter > 0 ? originalCounter - 1 : 0
+            const initProgress =
+                originalCounter > 0 ? 1 - initCounter / originalCounter : 0
 
             this.setState({
                 initialState: false,
@@ -117,43 +117,42 @@ class Timer extends Component {
                 pause: true,
                 resume: false,
                 progress: initProgress,
-            });
-
-            return;
+            })
+            return
         }
 
         if (this.state.counter <= 0) {
-
             this.setState({
-                counter: 0, progress: 0, play: true, pause: false, resume: false,
-            });
-            this.releaseResources();
+                counter: 0,
+                progress: 0,
+                play: true,
+                pause: false,
+                resume: false,
+            })
+            this.releaseResources()
         } else {
-
-            const counter = this.state.counter - 1;
-
-            const progress = 1 - (counter / this.state.originalCounter);
-
+            const counter = this.state.counter - 1
+            const progress = 1 - counter / this.state.originalCounter
             this.setState({
                 counter: counter,
                 progress: progress,
-            });
-
+            })
         }
     }
 
     _displayText() {
-        return moment.duration(this.state.counter, 'seconds').format('hh:mm:ss', {trim: false});
+        return moment
+            .duration(this.state.counter, 'seconds')
+            .format('hh:mm:ss', { trim: false })
     }
 
     _play() {
         if (this.state.play) {
-            //this._stop();
             this.setState({
                 initialState: true,
                 play: false,
                 pause: true,
-                resume: false
+                resume: false,
             })
         } else if (this.state.pause) {
             this.releaseResources()
@@ -163,9 +162,9 @@ class Timer extends Component {
                 progress: this.state.progress,
                 play: false,
                 pause: false,
-                resume: true
+                resume: true,
             })
-            return;
+            return
         } else if (this.state.resume) {
             this.setState({
                 counter: this.state.counter,
@@ -173,11 +172,11 @@ class Timer extends Component {
                 progress: this.state.progress,
                 play: false,
                 pause: true,
-                resume: false
+                resume: false,
             })
         }
 
-        timer.setInterval(this, 'tick', () => this.tick(), 1000);
+        timer.setInterval(this, 'tick', () => this.tick(), 1000)
     }
 
     _cancel() {
@@ -185,19 +184,16 @@ class Timer extends Component {
     }
 
     _showActionText() {
-        if (this.state.pause)
-            return 'Pause'
-        else if (this.state.resume)
-            return 'Resume'
-        else
-            return 'Start'
+        if (this.state.pause) return 'Pause'
+        else if (this.state.resume) return 'Resume'
+        else return 'Start'
     }
 
     releaseResources() {
         try {
-            timer.clearTimeout(this);
-            timer.clearInterval(this);
-            timer.cancelAnimationFrame(this);
+            timer.clearTimeout(this)
+            timer.clearInterval(this)
+            timer.cancelAnimationFrame(this)
             this.setState({
                 counter: this.state.originalCounter,
                 progress: 0,
@@ -205,7 +201,7 @@ class Timer extends Component {
                 pause: false,
                 stop: true,
                 resume: false,
-            });
+            })
         } catch (err) {
             console.log(err)
         }
@@ -213,93 +209,165 @@ class Timer extends Component {
 
     render() {
         const {
-            remainingTime,
-            options = (options == null) ? this.defaultStyles : options,
+            options = options == null ? this.defaultStyles : options,
             animated,
             borderColor,
             borderWidth,
             color,
-            children,
             direction,
             fill,
-            formatText,
             indeterminate,
-            progress,
             rotation,
-            showsText,
-            size,
-            style,
             strokeCap,
             textStyle,
             thickness,
             unfilledColor,
             endAngle,
             allowFontScaling,
-            ...restProps
-        } = this.props;
+        } = this.props
+
+        const size =
+            typeof this.props.size === 'undefined' ? 350 : this.props.size
+        const showsText =
+            typeof this.props.showsText === 'undefined'
+                ? true
+                : this.props.showsText
+        const formatText =
+            typeof this.props.formatText === 'undefined'
+                ? 'library'
+                : this.props.formatText
+        const formatTextFlag =
+            typeof this.props.formatText === 'undefined' ? false : true
+
+        const hideCancelCircle =
+            typeof this.props.hideCancelCircle === 'undefined'
+                ? false
+                : this.props.hideCancelCircle
+        const textCancelCircle =
+            typeof this.props.textCancelCircle === 'undefined'
+                ? 'Cancel'
+                : this.props.textCancelCircle
+        const sizeCancelCircle =
+            typeof this.props.sizeCancelCircle === 'undefined'
+                ? 100
+                : this.props.sizeCancelCircle
+        const underlayColorCancelCircle =
+            typeof this.props.underlayColorCancelCircle === 'undefined'
+                ? '#ffffff'
+                : this.props.underlayColorCancelCircle
+
+        const hideStartCircle =
+            typeof this.props.hideStartCircle === 'undefined'
+                ? false
+                : this.props.hideStartCircle
+        const textStartCircle =
+            typeof this.props.textStartCircle === 'undefined'
+                ? 'Start'
+                : this.props.textStartCircle
+        const sizeStartCircle =
+            typeof this.props.sizeStartCircle === 'undefined'
+                ? 100
+                : this.props.sizeStartCircle
+        const underlayColorStartCircle =
+            typeof this.props.underlayColorStartCircle === 'undefined'
+                ? '#ffffff'
+                : this.props.underlayColorStartCircle
+
+        const textStartCircleFlag =
+            typeof this.props.textStartCircle === 'undefined' ? false : true
 
         return (
-            <View style={options.container}>
+            <View>
                 <View style={options.view}>
                     <Progress.Circle
                         animated={animated}
                         borderColor={borderColor}
                         borderWidth={borderWidth}
                         color={color}
-                        children={children}
                         direction={direction}
                         fill={fill}
-                        formatText={(progress) => this._displayText(progress)}
-                        indeterminate={this.props.indeterminate}
+                        formatText={(progress) =>
+                            !formatTextFlag
+                                ? this._displayText(progress)
+                                : formatText
+                        }
+                        indeterminate={indeterminate}
                         progress={this.state.progress}
                         rotation={rotation}
                         showsText={showsText}
                         size={size}
-                        style={style}
                         strokeCap={strokeCap}
                         textStyle={textStyle}
                         thickness={thickness}
                         unfilledColor={unfilledColor}
-                        endAngle={unfilledColor}
+                        endAngle={endAngle}
                         allowFontScaling={allowFontScaling}
                     />
                 </View>
                 <View style={options.view}>
-                    <TouchableHighlight style={options.highlight.style} underlayColor={options.play.underlayColor}
-                                        activeOpacity={1} onPress={() => this._cancel()}>
-                        <Progress.Circle
-                            textStyle={options.play.textStyle}
-                            style={options.play.style}
-                            size={100}
-                            showsText={showsText}
-                            animated={animated}
-                            progress={0}
-                            borderColor={options.play.borderColor}
-                            borderWidth={options.play.borderWidth}
-                            thickness={options.play.thickness}
-                            formatText={(progress) => 'Cancel'}
-                            indeterminate={false}
-                        />
-                    </TouchableHighlight>
-                    <TouchableHighlight style={options.highlight.style} activeOpacity={1}
-                                        underlayColor={options.cancel.underlayColor} onPress={() => this._play()}>
-                        <Progress.Circle
-                            textStyle={options.cancel.textStyle}
-                            style={options.cancel.style}
-                            size={100}
-                            showsText={showsText}
-                            animated={animated}
-                            progress={0}
-                            borderColor={options.cancel.borderColor}
-                            borderWidth={options.cancel.borderWidth}
-                            thickness={options.cancel.thickness}
-                            formatText={(progress) => this._showActionText()}
-                            indeterminate={false}
-                        />
-                    </TouchableHighlight>
+                    {!hideCancelCircle && (
+                        <TouchableHighlight
+                            style={options.cancel}
+                            underlayColor={underlayColorCancelCircle}
+                            activeOpacity={1}
+                            onPress={() => this._cancel()}
+                        >
+                            <Progress.Circle
+                                animated={animated}
+                                borderColor={borderColor}
+                                borderWidth={borderWidth}
+                                color={color}
+                                direction={direction}
+                                fill={fill}
+                                formatText={() => textCancelCircle}
+                                indeterminate={indeterminate}
+                                progress={0}
+                                rotation={rotation}
+                                showsText={showsText}
+                                size={sizeCancelCircle}
+                                textStyle={textStyle}
+                                thickness={thickness}
+                                unfilledColor={unfilledColor}
+                                endAngle={endAngle}
+                                allowFontScaling={allowFontScaling}
+                            />
+                        </TouchableHighlight>
+                    )}
+                    {!hideStartCircle && (
+                        <TouchableHighlight
+                            style={options.play}
+                            activeOpacity={1}
+                            underlayColor={underlayColorStartCircle}
+                            onPress={() => this._play()}
+                        >
+                            <Progress.Circle
+                                animated={animated}
+                                borderColor={borderColor}
+                                borderWidth={borderWidth}
+                                color={color}
+                                direction={direction}
+                                fill={fill}
+                                formatText={() =>
+                                    !textStartCircleFlag
+                                        ? this._showActionText()
+                                        : textStartCircle
+                                }
+                                indeterminate={indeterminate}
+                                progress={0}
+                                rotation={rotation}
+                                showsText={showsText}
+                                size={sizeStartCircle}
+                                textStyle={textStyle}
+                                thickness={thickness}
+                                unfilledColor={unfilledColor}
+                                endAngle={endAngle}
+                                allowFontScaling={allowFontScaling}
+                            />
+                        </TouchableHighlight>
+                    )}
                 </View>
             </View>
-        );
+        )
     }
 }
 

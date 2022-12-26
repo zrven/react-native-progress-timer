@@ -1,0 +1,8 @@
+{
+    "transformIgnorePatterns": [
+        "node_modules/(?!(jest-)?!(react-native|react-native-progress-timer|react-native-button|@react-navigation|moment/.*)/)"
+    ],
+    "transform": {
+        "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+}
