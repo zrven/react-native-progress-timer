@@ -7,7 +7,7 @@
         "format": "npx prettier --write ./*.js ./*.json",
         "lint": "npx eslint *.js",
         "test": "jest --config jest.config.json",
-        "prepublish": "npm test && npm run lint",
+        "prepare": "npm test && npm run lint",
         "postversion": "git push && git push --tags"
     },
     "jest": {

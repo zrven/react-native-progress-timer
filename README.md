@@ -12,7 +12,7 @@ React Native Timer component with progress indicator
 ## Usage
 
 ```js
-import { Timer } from 'react-native-progress-timer';
+import Timer from 'react-native-progress-timer';
 <Timer
     remainingTime={10}
     size={350}
@@ -73,7 +73,7 @@ import { Timer } from 'react-native-progress-timer';
 ```js
 import React from 'react'
 import { SafeAreaView, StyleSheet, View } from 'react-native'
-import { Timer } from 'react-native-progress-timer'
+import Timer from 'react-native-progress-timer'
 
 const App: () => React$Node = () => {
     return (
