@@ -148,5 +148,5 @@ const styles = StyleSheet.create({
 })
 ```
 
-License
+## License
 This project is released under the [MIT License](LICENSE).
